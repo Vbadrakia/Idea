@@ -8,14 +8,19 @@ import { LayoutGrid, User as UserIcon, ShieldCheck, LogOut } from 'lucide-react'
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [authRole, setAuthRole] = useState<'candidate' | 'recruiter' | null>(null); // Controls which auth screen to show
+  const [authRole, setAuthRole] = useState<'candidate' | 'recruiter' | null>(null);
   const [jobs, setJobs] = useState<Job[]>(MOCK_JOBS);
   const [applications, setApplications] = useState<Application[]>(MOCK_APPLICATIONS);
 
   const handleUpdateStatus = (appId: string, status: ApplicationStatus, feedback?: string) => {
     setApplications(prev => prev.map(app => {
       if (app.id === appId) {
-        return { ...app, status, feedback };
+        return { 
+          ...app, 
+          status, 
+          feedback,
+          lastStatusUpdateAt: new Date().toISOString()
+        };
       }
       return app;
     }));
@@ -27,14 +32,11 @@ const App: React.FC = () => {
     const job = jobs.find(j => j.id === jobId);
     if (!job) return;
 
-    // Check if already applied
     if (applications.some(a => a.jobId === jobId && a.candidateId === user.id)) {
         alert("You have already applied for this job.");
         return;
     }
 
-    // Create a fake URL for the uploaded file (blob URL)
-    // In a real app, this would be an S3/storage link
     const resumeLink = URL.createObjectURL(resumeFile);
 
     const newApp: Application = {
@@ -45,11 +47,26 @@ const App: React.FC = () => {
       candidateEmail: user.email,
       appliedAt: new Date().toISOString(),
       status: ApplicationStatus.APPLIED,
-      skills: ['React', 'TypeScript'], // In a real app, this would come from user profile
+      skills: ['React', 'TypeScript'],
       resumeLink: resumeLink
     };
     setApplications([newApp, ...applications]);
     alert("Application submitted successfully!");
+  };
+
+  const handleConfirmInterview = (appId: string, date: string, time: string) => {
+    setApplications(prev => prev.map(app => {
+      if (app.id === appId) {
+        return { 
+          ...app, 
+          status: ApplicationStatus.SCHEDULED, 
+          interviewDate: date, 
+          interviewTime: time,
+          lastStatusUpdateAt: new Date().toISOString()
+        };
+      }
+      return app;
+    }));
   };
 
   const handleAddJob = (jobData: Omit<Job, 'id'>) => {
@@ -60,12 +77,36 @@ const App: React.FC = () => {
     setJobs([newJob, ...jobs]);
   };
 
-  // Auth Flow Handling
+  const handleSubscribe = (tier: string) => {
+    if (!user || user.role !== 'recruiter') return;
+    
+    // Create or update mock subscription
+    const maxAgents = tier === 'basic' ? 3 : tier === 'pro' ? 10 : 999;
+    const maxCredits = tier === 'basic' ? 50 : tier === 'pro' ? 250 : 9999;
+    
+    const newSubscription = {
+      tier: (tier.charAt(0).toUpperCase() + tier.slice(1)) as any,
+      status: 'active' as const,
+      renewsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      usage: {
+        activeAgents: 0,
+        maxAgents,
+        outreachCredits: 0,
+        maxOutreachCredits: maxCredits
+      }
+    };
+    
+    setUser({
+      ...user,
+      subscription: newSubscription
+    });
+    alert(`Successfully subscribed to ${tier.toUpperCase()} plan!`);
+  };
+
   if (authRole && !user) {
       return <AuthScreen role={authRole} onLogin={setUser} onBack={() => setAuthRole(null)} />;
   }
 
-  // Landing Page
   if (!user) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
@@ -74,7 +115,7 @@ const App: React.FC = () => {
                 <ShieldCheck className="text-white" size={32} />
             </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">ClearPath Recruit</h1>
-          <p className="text-gray-500 mb-8">The transparent recruitment platform where feedback is standard, not optional.</p>
+          <p className="text-gray-500 mb-8 font-medium">The transparent recruitment platform where feedback is standard, not optional.</p>
           
           <div className="space-y-3">
             <button
@@ -82,12 +123,12 @@ const App: React.FC = () => {
               className="w-full py-4 px-6 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all group flex items-center justify-between"
             >
               <div className="flex items-center gap-3">
-                <div className="bg-gray-100 p-2 rounded-lg group-hover:bg-blue-100">
+                <div className="bg-gray-100 p-2 rounded-lg group-hover:bg-blue-100 transition-colors">
                     <LayoutGrid size={20} />
                 </div>
                 <div className="text-left">
                     <span className="block font-semibold text-gray-900 group-hover:text-blue-700">I am a Recruiter</span>
-                    <span className="text-xs text-gray-500">Manage jobs & provide feedback</span>
+                    <span className="text-xs text-gray-500">Manage jobs & track reputation</span>
                 </div>
               </div>
             </button>
@@ -96,12 +137,12 @@ const App: React.FC = () => {
               className="w-full py-4 px-6 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all group flex items-center justify-between"
             >
                <div className="flex items-center gap-3">
-                <div className="bg-gray-100 p-2 rounded-lg group-hover:bg-blue-100">
+                <div className="bg-gray-100 p-2 rounded-lg group-hover:bg-blue-100 transition-colors">
                     <UserIcon size={20} />
                 </div>
                 <div className="text-left">
                     <span className="block font-semibold text-gray-900 group-hover:text-blue-700">I am a Candidate</span>
-                    <span className="text-xs text-gray-500">Find jobs & track status</span>
+                    <span className="text-xs text-gray-500">Find responsive companies</span>
                 </div>
               </div>
             </button>
@@ -111,11 +152,9 @@ const App: React.FC = () => {
     );
   }
 
-  // Authenticated Application
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-        {/* Header */}
-        <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
+        <header className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <div className="bg-blue-600 p-1.5 rounded-lg">
@@ -125,10 +164,10 @@ const App: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                        {user.avatar && <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full border border-gray-200" />}
+                        {user.avatar && <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full border border-gray-200 shadow-sm" />}
                         <div className="hidden sm:block text-right">
                              <div className="text-sm font-semibold text-gray-900">{user.name}</div>
-                             <div className="text-xs text-gray-500 capitalize">{user.role}</div>
+                             <div className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">{user.role}</div>
                         </div>
                     </div>
                     <button 
@@ -152,6 +191,7 @@ const App: React.FC = () => {
             applications={applications}
             onUpdateStatus={handleUpdateStatus}
             onAddJob={handleAddJob}
+            onSubscribe={handleSubscribe}
             currentUser={user}
           />
         ) : (
@@ -159,6 +199,7 @@ const App: React.FC = () => {
             jobs={jobs}
             applications={applications}
             onApply={handleApply}
+            onConfirmInterview={handleConfirmInterview}
             currentUser={user}
           />
         )}

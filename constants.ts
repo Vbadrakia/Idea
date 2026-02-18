@@ -1,4 +1,58 @@
-import { Application, ApplicationStatus, Job } from './types';
+import { Application, ApplicationStatus, Job, AvailabilitySlot, CareerPath, ExternalCandidate } from './types';
+
+export const SUBSCRIPTION_TIERS = [
+  {
+    id: 'basic',
+    name: 'Basic',
+    price: '$49',
+    features: ['3 Active AI Agents', '50 Outreach Credits', 'Weekly Scans', 'Basic Support'],
+    limits: { maxAgents: 3, maxOutreachCredits: 50 }
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    price: '$149',
+    features: ['10 Active AI Agents', '250 Outreach Credits', 'Daily Scans', 'Priority Support', 'Explainable AI Scoring'],
+    limits: { maxAgents: 10, maxOutreachCredits: 250 }
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
+    price: 'Custom',
+    features: ['Unlimited AI Agents', 'Unlimited Outreach', 'Real-time 24/7 Sourcing', 'Dedicated Account Manager', 'Custom API Access'],
+    limits: { maxAgents: 999, maxOutreachCredits: 9999 }
+  }
+];
+
+export const MOCK_EXTERNAL_CANDIDATES: ExternalCandidate[] = [
+  {
+    id: 'ext1',
+    name: 'Jordan Rivera',
+    email: 'jordan.r@talent-pool.com',
+    skills: ['React', 'Next.js', 'PostgreSQL', 'Cloud Infrastructure'],
+    experience: '6 years',
+    currentRole: 'Senior Frontend Lead',
+    location: 'Remote'
+  },
+  {
+    id: 'ext2',
+    name: 'Sam Chen',
+    email: 'sam.c@designers.hub',
+    skills: ['Figma', 'User Research', 'Design Systems', 'Mobile App Design'],
+    experience: '4 years',
+    currentRole: 'UX Designer',
+    location: 'San Francisco, CA'
+  },
+  {
+    id: 'ext3',
+    name: 'Taylor Brooks',
+    email: 't.brooks@eng-net.org',
+    skills: ['Go', 'Kubernetes', 'Microservices', 'Redis'],
+    experience: '7 years',
+    currentRole: 'Backend Architect',
+    location: 'Austin, TX'
+  }
+];
 
 export const MOCK_JOBS: Job[] = [
   {
@@ -60,7 +114,9 @@ export const MOCK_APPLICATIONS: Application[] = [
     appliedAt: '2023-10-25',
     status: ApplicationStatus.REVIEWING,
     skills: ['React', 'Node.js', 'AWS'],
-    resumeLink: '#'
+    resumeLink: '#',
+    aiScore: 85,
+    aiReason: 'Strong match for React and Node.js. Experience level aligns with the Senior requirement.'
   },
   {
     id: 'a2',
@@ -71,7 +127,9 @@ export const MOCK_APPLICATIONS: Application[] = [
     appliedAt: '2023-10-24',
     status: ApplicationStatus.APPLIED,
     skills: ['Angular', 'Java', 'SQL'],
-    resumeLink: '#'
+    resumeLink: '#',
+    aiScore: 42,
+    aiReason: 'Skills mismatch: Primary experience in Angular/Java while role requires React expert.'
   },
   {
     id: 'a3',
@@ -83,6 +141,120 @@ export const MOCK_APPLICATIONS: Application[] = [
     status: ApplicationStatus.REJECTED,
     feedback: 'While your portfolio is impressive, we are looking for someone with more specific experience in SaaS product design. We encourage you to apply for our Junior Designer role when it opens.',
     skills: ['Photoshop', 'Sketch'],
-    resumeLink: '#'
+    resumeLink: '#',
+    aiScore: 65,
+    aiReason: 'Good design fundamentals but lacks Figma and UX research depth required for this role.'
+  }
+];
+
+export const MOCK_AVAILABILITY: AvailabilitySlot[] = [
+  {
+    id: 's1',
+    date: '2024-11-04',
+    times: ['09:00 AM', '10:30 AM', '02:00 PM', '04:30 PM']
+  },
+  {
+    id: 's2',
+    date: '2024-11-05',
+    times: ['11:00 AM', '01:30 PM', '03:00 PM']
+  },
+  {
+    id: 's3',
+    date: '2024-11-06',
+    times: ['09:30 AM', '10:00 AM', '01:00 PM', '04:00 PM']
+  }
+];
+
+export const MOCK_CAREER_PATHS: CareerPath[] = [
+  {
+    id: 'cp1',
+    name: 'Frontend Engineering',
+    industry: 'Software Development',
+    milestones: [
+      {
+        id: 'm1',
+        level: 'Entry',
+        title: 'Junior Frontend Developer',
+        minSalary: 60000,
+        maxSalary: 85000,
+        avgYears: 1,
+        requiredSkills: ['HTML', 'CSS', 'JavaScript', 'React Basics'],
+        certifications: ['Responsive Web Design (FreeCodeCamp)'],
+        description: 'Focus on implementing UIs from designs and squashing bugs.'
+      },
+      {
+        id: 'm2',
+        level: 'Mid',
+        title: 'Frontend Engineer',
+        minSalary: 95000,
+        maxSalary: 130000,
+        avgYears: 3,
+        requiredSkills: ['TypeScript', 'Testing (Jest)', 'Next.js', 'State Management'],
+        certifications: ['Meta Front-End Developer Professional Certificate'],
+        description: 'Own features end-to-end and optimize performance.'
+      },
+      {
+        id: 'm3',
+        level: 'Senior',
+        title: 'Senior Frontend Engineer',
+        minSalary: 145000,
+        maxSalary: 190000,
+        avgYears: 5,
+        requiredSkills: ['System Design', 'Performance Optimization', 'Architecture', 'Mentorship'],
+        certifications: ['AWS Certified Cloud Practitioner'],
+        description: 'Lead architecture decisions and mentor the team.'
+      },
+      {
+        id: 'm4',
+        level: 'Leadership',
+        title: 'Staff Engineer / Tech Lead',
+        minSalary: 195000,
+        maxSalary: 250000,
+        avgYears: 8,
+        requiredSkills: ['Strategic Planning', 'People Management', 'Cross-team Collab'],
+        certifications: ['Project Management Professional (PMP)'],
+        description: 'Drive long-term technical vision and align with business goals.'
+      }
+    ]
+  },
+  {
+    id: 'cp2',
+    name: 'Product Design',
+    industry: 'Design',
+    milestones: [
+      {
+        id: 'pd1',
+        level: 'Entry',
+        title: 'Junior Product Designer',
+        minSalary: 55000,
+        maxSalary: 80000,
+        avgYears: 1,
+        requiredSkills: ['Figma', 'Basic UX Principles', 'Prototyping'],
+        certifications: ['Google UX Design Certificate'],
+        description: 'Assist in creating user flows and high-fidelity screens.'
+      },
+      {
+        id: 'pd2',
+        level: 'Mid',
+        title: 'Product Designer',
+        minSalary: 90000,
+        maxSalary: 125000,
+        avgYears: 3,
+        requiredSkills: ['User Research', 'Design Systems', 'Advanced Prototyping'],
+        certifications: ['Interaction Design Foundation Specialist'],
+        description: 'Lead design for complex features and conduct user testing.'
+      },
+      {
+        id: 'pd3',
+        level: 'Senior',
+        title: 'Senior Product Designer',
+        minSalary: 135000,
+        maxSalary: 180000,
+        avgYears: 6,
+        requiredSkills: ['Strategy', 'Data-informed Design', 'Leadership'],
+        certifications: ['NN/g UX Certification'],
+        description: 'Set design standards and influence product roadmap.'
+      }
+    ]
   }
 ];
