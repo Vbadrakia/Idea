@@ -139,23 +139,34 @@ export const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ jobs, ap
             />
           ) : (
             <div className="space-y-8 animate-in fade-in duration-500">
-               {/* Quick Stats */}
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <ReputationBadge stats={reputationStats} />
-                  <div className="md:col-span-2 bg-gradient-to-br from-indigo-600 to-blue-700 rounded-3xl p-6 text-white shadow-xl shadow-indigo-100 relative overflow-hidden flex items-center">
+               {/* Quick Stats & AI Banner */}
+               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  <div className="lg:col-span-5">
+                    <ReputationBadge stats={reputationStats} />
+                  </div>
+                  <div className="lg:col-span-7 bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 rounded-3xl p-8 text-white shadow-xl shadow-blue-100 relative overflow-hidden flex flex-col justify-center">
                     <div className="relative z-10">
-                      <h3 className="text-xl font-black mb-2">Hire Smarter with AI Agents</h3>
-                      <p className="text-indigo-100 text-sm max-w-sm mb-4">Your current plan includes 3 sourcing agents. Deploy one now to start seeing autonomous talent matches.</p>
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md">
+                           <Cpu size={24} className="text-white" />
+                        </div>
+                        <h3 className="text-2xl font-black tracking-tight">Hire Smarter with AI Agents</h3>
+                      </div>
+                      <p className="text-blue-100 text-sm max-w-md mb-6 leading-relaxed font-medium">
+                        Deploy autonomous sourcing agents to scan millions of profiles and find high-fit candidates while you sleep.
+                      </p>
                       <button 
                         onClick={() => setActiveTab('ai-sourcing')}
-                        className="bg-white text-indigo-700 px-6 py-2 rounded-xl text-xs font-black shadow-lg hover:bg-indigo-50 transition-all flex items-center gap-2"
+                        className="bg-white text-blue-700 px-8 py-3 rounded-2xl text-sm font-black shadow-xl hover:bg-blue-50 transition-all flex items-center gap-3 w-fit group"
                       >
-                        <Bot size={16} /> Deploy New Agent
+                        <Zap size={18} className="group-hover:scale-110 transition-transform" /> 
+                        Deploy New Agent
                       </button>
                     </div>
                     <div className="absolute right-0 top-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
-                       <Cpu size={180} />
+                       <Cpu size={240} />
                     </div>
+                    <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
                   </div>
                </div>
 

@@ -127,9 +127,11 @@ export const CandidateDashboard: React.FC<CandidateDashboardProps> = ({ jobs, ap
                 </div>
 
                 {reputation.responseRate > 90 && (
-                    <div className="mt-3 flex items-center gap-2 text-[11px] text-amber-700 bg-amber-50 px-2 py-1 rounded-md border border-amber-100 font-medium w-fit">
-                        <TrendingUp size={12} />
-                        Highly Responsive: Provides feedback to {Math.round(reputation.responseRate)}% of candidates
+                    <div className="mt-3 flex items-center gap-3 text-[11px] text-blue-800 bg-blue-50/50 px-3 py-2 rounded-xl border border-blue-100 font-bold animate-pulse-subtle">
+                        <div className="bg-blue-600 p-1 rounded-lg text-white">
+                            <TrendingUp size={12} />
+                        </div>
+                        <span>Highly Responsive: Provides feedback to {Math.round(reputation.responseRate)}% of candidates</span>
                     </div>
                 )}
                 

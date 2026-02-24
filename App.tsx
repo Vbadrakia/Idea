@@ -4,7 +4,7 @@ import { Application, ApplicationStatus, User, Job } from './types';
 import { RecruiterDashboard } from './components/RecruiterDashboard';
 import { CandidateDashboard } from './components/CandidateDashboard';
 import { AuthScreen } from './components/AuthScreen';
-import { LayoutGrid, User as UserIcon, ShieldCheck, LogOut } from 'lucide-react';
+import { LayoutGrid, User as UserIcon, ShieldCheck, LogOut, ChevronRight } from 'lucide-react';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -110,41 +110,43 @@ const App: React.FC = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-            <div className="w-16 h-16 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-lg shadow-blue-200">
-                <ShieldCheck className="text-white" size={32} />
+        <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-10 text-center border border-gray-100">
+            <div className="w-20 h-20 bg-blue-600 rounded-3xl mx-auto flex items-center justify-center mb-8 shadow-xl shadow-blue-200 transform -rotate-3 hover:rotate-0 transition-transform">
+                <ShieldCheck className="text-white" size={40} />
             </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">ClearPath Recruit</h1>
-          <p className="text-gray-500 mb-8 font-medium">The transparent recruitment platform where feedback is standard, not optional.</p>
+          <h1 className="text-4xl font-black text-gray-900 mb-3 tracking-tight">ClearPath Recruit</h1>
+          <p className="text-gray-500 mb-10 font-medium leading-relaxed">The transparent recruitment platform where feedback is standard, not optional.</p>
           
-          <div className="space-y-3">
+          <div className="space-y-4">
             <button
               onClick={() => setAuthRole('recruiter')}
-              className="w-full py-4 px-6 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all group flex items-center justify-between"
+              className="w-full py-5 px-6 border-2 border-gray-100 rounded-2xl hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all group flex items-center justify-between text-left"
             >
-              <div className="flex items-center gap-3">
-                <div className="bg-gray-100 p-2 rounded-lg group-hover:bg-blue-100 transition-colors">
-                    <LayoutGrid size={20} />
+              <div className="flex items-center gap-4">
+                <div className="bg-gray-100 p-3 rounded-xl group-hover:bg-blue-100 transition-colors">
+                    <LayoutGrid size={24} className="text-gray-600 group-hover:text-blue-600" />
                 </div>
-                <div className="text-left">
-                    <span className="block font-semibold text-gray-900 group-hover:text-blue-700">I am a Recruiter</span>
-                    <span className="text-xs text-gray-500">Manage jobs & track reputation</span>
+                <div>
+                    <span className="block font-black text-gray-900 group-hover:text-blue-700 text-lg">I am a Recruiter</span>
+                    <span className="text-xs text-gray-500 font-bold uppercase tracking-wider">Manage jobs & track reputation</span>
                 </div>
               </div>
+              <ChevronRight size={20} className="text-gray-300 group-hover:text-blue-400" />
             </button>
             <button
               onClick={() => setAuthRole('candidate')}
-              className="w-full py-4 px-6 border border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all group flex items-center justify-between"
+              className="w-full py-5 px-6 border-2 border-gray-100 rounded-2xl hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-all group flex items-center justify-between text-left"
             >
-               <div className="flex items-center gap-3">
-                <div className="bg-gray-100 p-2 rounded-lg group-hover:bg-blue-100 transition-colors">
-                    <UserIcon size={20} />
+               <div className="flex items-center gap-4">
+                <div className="bg-gray-100 p-3 rounded-xl group-hover:bg-blue-100 transition-colors">
+                    <UserIcon size={24} className="text-gray-600 group-hover:text-blue-600" />
                 </div>
-                <div className="text-left">
-                    <span className="block font-semibold text-gray-900 group-hover:text-blue-700">I am a Candidate</span>
-                    <span className="text-xs text-gray-500">Find responsive companies</span>
+                <div>
+                    <span className="block font-black text-gray-900 group-hover:text-blue-700 text-lg">I am a Candidate</span>
+                    <span className="text-xs text-gray-500 font-bold uppercase tracking-wider">Find responsive companies</span>
                 </div>
               </div>
+              <ChevronRight size={20} className="text-gray-300 group-hover:text-blue-400" />
             </button>
           </div>
         </div>
